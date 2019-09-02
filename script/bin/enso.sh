@@ -1,6 +1,6 @@
 #!/system/bin/sh
 #
-# OnTheOne ens?
+# OnTheOne ensō
 # Coded by BlackMesa123 @2019
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,7 +36,7 @@ fi
 mount -o remount,rw /system
 
 echo "" >> $LOGFILE
-echo "--- OnTheOne ens? first boot script ---" >> $LOGFILE
+echo "--- OnTheOne ensō first boot script ---" >> $LOGFILE
 echo "" >> $LOGFILE
 
 if ! $IsSupported; then
@@ -69,7 +69,7 @@ fi
 
 # End
 echo "" >> $LOGFILE
-echo "I: All set! Deleting ens?..." >> $LOGFILE
+echo "I: All set! Deleting ensō..." >> $LOGFILE
 rm -f /system/etc/init/enso.rc >> $LOGFILE
 rm -f /system/bin/enso.sh >> $LOGFILE
 rm -rf /system/enso >> $LOGFILE
