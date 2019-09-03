@@ -65,6 +65,8 @@ fi
 echo " - Applying device fixes" >> $LOGFILE
 if $IsDream2; then
     /system/xbin/tar -xjf /system/enso/dream2.onpkg -C /system >> $LOGFILE
+    /system/xbin/ln -s /vendor/lib/vndk/libaudioroute.so /system/lib/libaudioroute.so >> $LOGFILE
+    /system/xbin/ln -s /vendor/lib/vndk/libtinyalsa.so /system/lib/libtinyalsa.so >> $LOGFILE
 fi
 
 # End
