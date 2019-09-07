@@ -69,6 +69,11 @@ if $IsDream2; then
     /system/xbin/ln -s /vendor/lib/vndk/libtinyalsa.so /system/lib/libtinyalsa.so >> $LOGFILE
 fi
 
+if [ -f /system/enso/enso.prop ]; then
+    echo "# ensō - device related props" >> /system/build.prop
+    /system/xbin/cat /system/enso/enso.prop >> /system/build.prop
+fi
+
 # End
 echo "" >> $LOGFILE
 echo "I: All set! Deleting ensō..." >> $LOGFILE
