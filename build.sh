@@ -29,8 +29,8 @@ fi
 if [ "$1" = "arm64" ]; then
     ARCH=arm64
 fi
-if [ "$1" != "arm" ] | [ $1 != "arm64" ] ; then
-    echo "Unknown arch defined. Using default one (arm64)."
+if [ -z "$ARCH" ] ; then
+    echo "Unknown arch defined ($1). Using default one (arm64)."
     ARCH=arm64
 fi
 
