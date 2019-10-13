@@ -17,51 +17,51 @@
 #
 
 # Define fields
-ROOTDIR=$(pwd)
-OUTDIR=$ROOTDIR/out
+ROOTDIR="$(pwd)";
+OUTDIR="$ROOTDIR/out";
 if [ -z "$1" ]; then
-    echo "No arch defined. Using default one (arm64)."
-    ARCH=arm64
-fi
+    echo "No arch defined. Using default one (arm64).";
+    ARCH="arm64";
+fi;
 if [ "$1" = "arm" ]; then
-    ARCH=arm
-fi
+    ARCH="arm";
+fi;
 if [ "$1" = "arm64" ]; then
-    ARCH=arm64
-fi
+    ARCH="arm64";
+fi;
 if [ -z "$ARCH" ] ; then
-    echo "Unknown arch defined ($1). Using default one (arm64)."
-    ARCH=arm64
-fi
+    echo "Unknown arch defined ($1). Using default one (arm64).";
+    ARCH="arm64";
+fi;
 
 # Create necessary dirs
 if [ ! -d $OUTDIR ]; then
-    mkdir $OUTDIR
-fi
-rm -rf $OUTDIR/*
+    mkdir "$OUTDIR"
+fi;
+rm -rf $OUTDIR/*;
 
-mkdir $OUTDIR/system
-mkdir $OUTDIR/system/enso
-mkdir $OUTDIR/system/xbin
+mkdir $OUTDIR/system;
+mkdir $OUTDIR/system/enso;
+mkdir $OUTDIR/system/xbin;
 
 # Merge script files
-cp -r $ROOTDIR/script/. $OUTDIR/system
+cp -r $ROOTDIR/script/. $OUTDIR/system;
 
 if [ "$ARCH" = "arm" ]; then
-    BBBIN=busybox-sel
-fi
+    BBBIN="busybox-sel";
+fi;
 if [ "$ARCH" = "arm64" ]; then
-    BBBIN=busybox64-sel
-fi
-cp $ROOTDIR/busybox/$BBBIN $OUTDIR/system/xbin/busybox
+    BBBIN="busybox64-sel";
+fi;
+cp $ROOTDIR/busybox/$BBBIN $OUTDIR/system/xbin/busybox;
 
-cd $ROOTDIR/devicefiles
+cd $ROOTDIR/devicefiles;
 for device in $ROOTDIR/devicefiles/*; do
-    cd $device > /dev/null
-    tar -cjf $device.onpkg .
-    cd - > /dev/null
-done
-cd $ROOTDIR > /dev/null
-mv $ROOTDIR/devicefiles/*.onpkg $OUTDIR/system/enso
+    cd $device > /dev/null;
+    tar -cjf $device.onpkg .;
+    cd - > /dev/null;
+done;
+cd "$ROOTDIR" > "/dev/null";
+mv $ROOTDIR/devicefiles/*.onpkg $OUTDIR/system/enso;
 
 

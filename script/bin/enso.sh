@@ -17,105 +17,110 @@
 #
 
 ## Fields
-LOGFILE="/dev/null"
-IsSupported=false
-IsDream2=false
+LOGFILE="/dev/null";
+IsSupported=false;
+IsDream2=false;
 
-if [ "$(getprop ro.on.enso.debug)" = "true" ]; then
-    LOGFILE="/system/on_enso.log"
-fi
-if getprop ro.boot.bootloader | grep -iq -E -e '^G955'; then
-    IsSupported=true
-    IsDream2=true
-fi
 
 ## Functions
-enso_abort () {
-    echo "" >> $LOGFILE
-    exit 1
+function enso_abort() {
+    echo "" >> "$LOGFILE";
+    exit 1;
 }
 
-enso_checksupport () {
+function enso_checksupport() {
     if ! $IsSupported; then
-        echo "E: enso_checksupport: Device not recognized! Aborting..." >> $LOGFILE
-        enso_abort
-    fi
+        echo "E: enso_checksupport: Device not recognized! Aborting..." >> "$LOGFILE";
+        enso_abort;
+    fi;
     if $IsDream2; then
-        echo "I: enso_checksupport: Device recognized: Galaxy S8+" >> $LOGFILE
-    fi
+        echo "I: enso_checksupport: Device recognized: Galaxy S8+" >> "$LOGFILE";
+    fi;
 }
 
-enso_extractpkg () {
-    if [ ! -f $1 ]; then
-        echo "E: enso_extractpkg: $1 not found! Aborting..." >> $LOGFILE
-        enso_abort
+function enso_extractpkg() {
+    if [ ! -f "$1" ]; then
+        echo "E: enso_extractpkg: $1 not found! Aborting..." >> "$LOGFILE";
+        enso_abort;
     else
-        /system/xbin/tar -xjf $1 -C $2 >> $LOGFILE
-    fi
+        /system/xbin/tar -xjf "$1" -C "$2" >> "$LOGFILE";
+    fi;
 }
 
-enso_installbb () {
-    echo "I: enso_installbb: installing BusyBox in /system/xbin" >> $LOGFILE
+function enso_installbb() {
+    echo "I: enso_installbb: installing BusyBox in /system/xbin" >> "$LOGFILE";
     if [ ! -f /system/xbin/busybox ]; then
-        echo "E: enso_installbb: BusyBox bin not found! Aborting..." >> $LOGFILE
-        enso_abort
+        echo "E: enso_installbb: BusyBox bin not found! Aborting..." >> "$LOGFILE";
+        enso_abort;
     else
-        /system/xbin/busybox --install -s /system/xbin >> $LOGFILE
-    fi
+        /system/xbin/busybox --install -s /system/xbin >> "$LOGFILE";
+    fi;
     if [ ! -f /system/xbin/tar ]; then
-        echo "E: enso_installbb: BusyBox install failed somehow! Aborting..." >> $LOGFILE
-        enso_abort
-    fi
+        echo "E: enso_installbb: BusyBox install failed somehow! Aborting..." >> "$LOGFILE";
+        enso_abort;
+    fi;
 }
 
-enso_symlink () {
-    if [ ! -f $1 ]; then
-        echo "E: enso_symlink: $1 not found, couldn't link to $2" >> $LOGFILE
-        enso_abort
-    else
-        if [ -f $2 ]; then
-            /system/xbin/rm -f $2
-        fi
-        /system/xbin/ln -s $1 $2 >> $LOGFILE
-    fi
+function enso_initfields() {
+    if [ "$(getprop ro.on.enso.debug)" = "true" ]; then
+        LOGFILE="/system/on_enso.log";
+    fi;
+    if getprop ro.boot.bootloader | grep -iq -E -e '^G955'; then
+        IsSupported=true;
+        IsDream2=true;
+    fi;
 }
+
+function enso_symlink() {
+    if [ ! -f "$1" ]; then
+        echo "E: enso_symlink: $1 not found, couldn't link to $2" >> "$LOGFILE";
+        enso_abort;
+    else
+        if [ -f "$2" ]; then
+            /system/xbin/rm -f "$2";
+        fi;
+        /system/xbin/ln -s "$1" "$2" >> "$LOGFILE";
+    fi;
+}
+
 
 ## More life
-mount -o remount,rw /system
+mount -o remount,rw /system;
 
 # Init fields
-enso_initfields
+enso_initfields;
 
-echo "" >> $LOGFILE
-echo "--- OnTheOne ensō first boot script ---" >> $LOGFILE
-echo "" >> $LOGFILE
+echo "" >> "$LOGFILE";
+echo "--- OnTheOne ensō first boot script ---" >> "$LOGFILE";
+echo "-- Init. /system at" $(date '+%D %T') "--" >> "$LOGFILE";
+echo "" >> "$LOGFILE";
 
 # Check if device is compatible
-enso_checksupport
+enso_checksupport;
 
 # Install busybox
-enso_installbb
+enso_installbb;
 
 # Apply fixes
-echo "I: ensō: Applying device fixes" >> $LOGFILE
+echo "I: ensō: Applying device fixes" >> "$LOGFILE";
 if $IsDream2; then
-    enso_extractpkg "/system/enso/dream2.onpkg" "/system"
-    enso_symlink "/vendor/lib/vndk/libaudioroute.so" "/system/lib/libaudioroute.so"
-    enso_symlink "/vendor/lib/vndk/libtinyalsa.so" "/system/lib/libtinyalsa.so"
-    enso_symlink "/vendor/lib64/vndk/libssl.so" "/system/lib64/libssl.so"
-fi
+    enso_extractpkg "/system/enso/dream2.onpkg" "/system";
+    enso_symlink "/vendor/lib/vndk/libaudioroute.so" "/system/lib/libaudioroute.so";
+    enso_symlink "/vendor/lib/vndk/libtinyalsa.so" "/system/lib/libtinyalsa.so";
+    enso_symlink "/vendor/lib64/vndk/libssl.so" "/system/lib64/libssl.so";
+fi;
 
 if [ -f /system/enso/enso.prop ]; then
-    echo "# ensō - device related props" >> /system/build.prop
-    /system/xbin/cat /system/enso/enso.prop >> /system/build.prop
-fi
+    echo "# ensō - device related props" >> /system/build.prop;
+    /system/xbin/cat /system/enso/enso.prop >> /system/build.prop;
+fi;
 
 # End
-echo "I: ensō: All set! Script self-destroying..." >> $LOGFILE
-rm -f /system/etc/init/enso.rc >> $LOGFILE
-rm -f /system/bin/enso.sh >> $LOGFILE
-rm -rf /system/enso >> $LOGFILE
+echo "I: ensō: All set! Script self-destroying..." >> "$LOGFILE";
+rm -f /system/etc/init/enso.rc >> "$LOGFILE";
+rm -f /system/bin/enso.sh >> "$LOGFILE";
+rm -rf /system/enso >> "$LOGFILE";
 
-echo "I: ensō: Rebooting..." >> $LOGFILE
-mount -o remount,ro /system
-reboot
+echo "I: ensō: Rebooting..." >> "$LOGFILE";
+mount -o remount,ro /system;
+reboot;
