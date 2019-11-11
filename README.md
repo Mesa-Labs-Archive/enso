@@ -25,7 +25,6 @@ Supported devices list:
 * Wi-Fi
 ## What needs to be done:
 * Better audio fix (Volume is buggy)
-* Fix laggy video playback
 * FIx Wi-Fi disabled at each boot
 * Everything else not tested
 
