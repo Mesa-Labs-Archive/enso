@@ -49,8 +49,8 @@ function enso_extractpkg() {
 }
 
 function enso_fix_secontext() {
-    if [ ! -f "$1" ]; then
-        echo "E: enso_fix_secontext: $1 not found! Aborting..." >> "$LOGFILE";
+    if [ ! -f "$2" ]; then
+        echo "E: enso_fix_secontext: $2 not found! Aborting..." >> "$LOGFILE";
         enso_abort;
     else
         $BUSYBOX chcon -t "$1" "$2" >> "$LOGFILE";
