@@ -41,11 +41,20 @@ fi;
 rm -rf $OUTDIR/*;
 
 mkdir $OUTDIR/system;
+mkdir $OUTDIR/system/bin;
 mkdir $OUTDIR/system/enso;
+mkdir $OUTDIR/system/etc;
+mkdir $OUTDIR/system/etc/init;
 mkdir $OUTDIR/system/xbin;
 
 # Merge script files
-cp -r $ROOTDIR/script/. $OUTDIR/system;
+python "$ROOTDIR/bash_minifier/minifier.py" "$ROOTDIR/script/bin/enso.sh" > "$OUTDIR/ensomini.sh";
+echo '#!/system/bin/sh' > "$OUTDIR/system/bin/enso.sh";
+echo "echo '$(base64 $OUTDIR/ensomini.sh)' | base64 -d | sh" >> "$OUTDIR/system/bin/enso.sh";
+chmod +x "$OUTDIR/system/bin/enso.sh";
+rm -f "$OUTDIR/ensomini.sh";
+
+cp -r $ROOTDIR/script/etc/init/. $OUTDIR/system/etc/init/;
 
 if [ "$ARCH" = "arm" ]; then
     BBBIN="busybox-sel";
@@ -63,5 +72,3 @@ for device in $ROOTDIR/devicefiles/*; do
 done;
 cd "$ROOTDIR" > "/dev/null";
 mv $ROOTDIR/devicefiles/*.onpkg $OUTDIR/system/enso;
-
-

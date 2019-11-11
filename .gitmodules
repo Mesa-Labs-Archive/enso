@@ -1,3 +1,3 @@
-[submodule "bashfuscator"]
-	path = bashfuscator
-	url = https://gitlab.com/ontheonesrc/Bashfuscator.git
+[submodule "bash_minifier"]
+	path = bash_minifier
+	url = https://gitlab.com/ontheonesrc/bash_minifier.git
