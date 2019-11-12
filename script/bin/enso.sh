@@ -17,8 +17,10 @@
 #
 
 ## Fields
-LOGFILE="/dev/null";
 BUSYBOX="/system/xbin/busybox";
+LOGFILE="/dev/null";
+PATCHPATH="/system/enso/patch";
+
 IsSupported=false;
 IsDream2=false;
 
@@ -27,6 +29,17 @@ IsDream2=false;
 function enso_abort() {
     echo "" >> "$LOGFILE";
     exit 1;
+}
+
+function enso_apply_patches() {
+    if [ -d $PATCHPATH ]; then
+        cd "$PATCHPATH" > "/dev/null";
+        for PATCH in *.onconf; do
+            source "$PATCH";
+            applypatch $ORIGFILEPATH:$ORIGFILESIZE:$ORIGFILESUM "-" $NEWFILESUM $NEWFILESIZE $ORIGFILESUM:$PATCHPATH/$PATCHFILE;
+        done;
+        cd - > "/dev/null";
+    fi;
 }
 
 function enso_checksupport() {
@@ -88,10 +101,7 @@ function enso_symlink_recursive() {
         for FILENAME in *; do
             ORIGFILE="$1/$FILENAME";
             LINKFILE="$2/$FILENAME";
-            if [ -f "$LINKFILE" ]; then
-                $BUSYBOX rm -f "$LINKFILE";
-            fi;
-            $BUSYBOX ln -s "$ORIGFILE" "$LINKFILE" >> "$LOGFILE";
+            enso_symlink "$ORIGFILE" "$LINKFILE";
         done;
         cd - > "/dev/null";
     fi;
@@ -121,6 +131,8 @@ fi;
 
 enso_symlink_recursive "/vendor/lib/vndk" "/system/lib";
 enso_symlink_recursive "/vendor/lib64/vndk" "/system/lib64";
+
+enso_apply_patches;
 
 if [ -f /system/enso/enso.prop ]; then
     echo "# ensō - device related props" >> /system/build.prop;
