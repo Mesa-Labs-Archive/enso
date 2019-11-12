@@ -12,15 +12,15 @@ Supported devices list:
 
 ### Exynos 8895 family (S8/Note8) [hadesTreble]:
 ## What's working so far:
-* Boot (M20 needs extra SecExternalDisplay native methods)
 * Audio
+* Boot (M20 needs extra SecExternalDisplay native methods)
 * Gatekeeper
 * HWC
 * RIL (needs S9's vendor.samsung.hardware.radio framework)
-* Wi-Fi
+* Wi-Fi (needs S9's vendor.samsung.hardware.wifi framework)
 ## What needs to be done:
 * Better audio fix (Volume is buggy)
-* FIx Wi-Fi disabled at each boot
+* Samsung Camera FC
 * Everything else not tested
 
 </details>
