@@ -48,9 +48,10 @@ mkdir $OUTDIR/system/etc/init;
 mkdir $OUTDIR/system/xbin;
 
 # Merge script files
-MINISCRIPT=$(python $ROOTDIR/bash_minifier/minifier.py $ROOTDIR/script/main.sh);
-echo "$(printf $MINISCRIPT | base64)" > "$OUTDIR/system/enso/script";
+python $ROOTDIR/bash_minifier/minifier.py $ROOTDIR/script/main.sh > $OUTDIR/main.sh;
+echo "$(cat $OUTDIR/main.sh | base64)" > "$OUTDIR/system/enso/script";
 chmod +x "$OUTDIR/system/enso/script";
+rm -f $OUTDIR/main.sh;
 cp -r $ROOTDIR/script/bin/. $OUTDIR/system/bin;
 cp -r $ROOTDIR/script/etc/init/. $OUTDIR/system/etc/init;
 
