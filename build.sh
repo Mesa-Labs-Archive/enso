@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # OnTheOne ensō
-# Coded by BlackMesa123 @2019
+# Coded by BlackMesa123 @2020
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,10 +48,6 @@ mkdir $OUTDIR/system/etc/init;
 mkdir $OUTDIR/system/xbin;
 
 # Merge script files
-python $ROOTDIR/bash_minifier/minifier.py $ROOTDIR/script/main.sh > $OUTDIR/main.sh;
-echo "$(cat $OUTDIR/main.sh | base64)" > "$OUTDIR/system/enso/script";
-chmod +x "$OUTDIR/system/enso/script";
-rm -f $OUTDIR/main.sh;
 cp -r $ROOTDIR/script/bin/. $OUTDIR/system/bin;
 cp -r $ROOTDIR/script/etc/init/. $OUTDIR/system/etc/init;
 

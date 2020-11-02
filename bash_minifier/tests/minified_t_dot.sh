@@ -1,1 +1,0 @@
-true;. o.sh;false
